@@ -1,36 +1,30 @@
-//links
-//http://eloquentjavascript.net/09_regexp.html
-//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
-
-
 var messages = [], //array that hold the record of each string in chat
-  lastUserMessage = "", //keeps track of the most recent input string from the user
-  botMessage = "", //var keeps track of what the chatbot is going to say
-  botName = 'Chatbot', //name of the chatbot
-  talking = true; //when false the speach function doesn't work
+lastUserMessage = "", //keeps track of the most recent input string from the user
+botMessage = "", //var keeps track of what the chatbot is going to say
+botName = 'Chatbot', //name of the chatbot
+talking = true; //when false the speach function doesn't work
 //
-//
-//****************************************************************
-//****************************************************************
-//****************************************************************
-//****************************************************************
-//****************************************************************
-//****************************************************************
-//****************************************************************
 //edit this function to change what the chatbot says
 function chatbotResponse() {
   talking = true;
-  botMessage = "I’m still under development. Please come back later."; //the default message
+
+  var apigClient = apigClientFactory.newClient({
+    region: 'us-east-1' // The region where the API is deployed
+  });
+
+  apigClient.chatbotPost({},{})
+      .then(function(response) {
+        //add the chatbot's name and message to the array messages
+        messages.push("<b>" + botName + ":</b> " + response.data.body);
+        // says the message using the text to speech function written below
+        Speech(botMessage);
+        //outputs the last few array elements of messages to html
+        for (var i = 1; i < 8; i++) {
+        if (messages[messages.length - i])
+          document.getElementById("chatlog" + i).innerHTML = messages[messages.length - i];
+        }
+      });
 }
-//****************************************************************
-//****************************************************************
-//****************************************************************
-//****************************************************************
-//****************************************************************
-//****************************************************************
-//****************************************************************
-//
-//s
 //
 //this runs each time enter is pressed.
 //It controls the overall input and output
@@ -46,15 +40,6 @@ function newEntry() {
     //Speech(lastUserMessage);  //says what the user typed outloud
     //sets the variable botMessage in response to lastUserMessage
     chatbotResponse();
-    //add the chatbot's name and message to the array messages
-    messages.push("<b>" + botName + ":</b> " + botMessage);
-    // says the message using the text to speech function written below
-    //Speech(botMessage);
-    //outputs the last few array elements of messages to html
-    for (var i = 1; i < 8; i++) {
-      if (messages[messages.length - i])
-        document.getElementById("chatlog" + i).innerHTML = messages[messages.length - i];
-    }
   }
 }
 
