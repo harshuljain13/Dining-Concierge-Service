@@ -3,21 +3,23 @@ lastUserMessage = "", //keeps track of the most recent input string from the use
 botMessage = "", //var keeps track of what the chatbot is going to say
 botName = 'Chatbot', //name of the chatbot
 talking = true; //when false the speach function doesn't work
+var apigClient = apigClientFactory.newClient({
+  region: 'us-east-1' // The region where the API is deployed
+});
+
 //
 //edit this function to change what the chatbot says
-function chatbotResponse() {
+function chatbotResponse(message_body) {
   talking = true;
-
-  var apigClient = apigClientFactory.newClient({
-    region: 'us-east-1' // The region where the API is deployed
-  });
-
-  apigClient.chatbotPost({},{})
+  apigClient.chatbotPost({}, message_body)
       .then(function(response) {
         //add the chatbot's name and message to the array messages
-        messages.push("<b>" + botName + ":</b> " + response.data.body);
+        console.log(response);
+        for(var i=0; i<response.data.messages.length; i++) {
+          messages.push("<b>" + botName + ":</b> " + response.data.messages[i].unstructured.text);
+        }
         // says the message using the text to speech function written below
-        Speech(botMessage);
+        //Speech(response.data.body);
         //outputs the last few array elements of messages to html
         for (var i = 1; i < 8; i++) {
         if (messages[messages.length - i])
@@ -25,6 +27,7 @@ function chatbotResponse() {
         }
       });
 }
+
 //
 //this runs each time enter is pressed.
 //It controls the overall input and output
@@ -39,7 +42,20 @@ function newEntry() {
     messages.push(lastUserMessage);
     //Speech(lastUserMessage);  //says what the user typed outloud
     //sets the variable botMessage in response to lastUserMessage
-    chatbotResponse();
+    var current_timestamp = Math.floor(Date.now() / 1000);
+    var message_body = {
+      'messages': [
+        {
+          "type":"string",
+          "unstructured": {
+            "id": "1",
+            "text": lastUserMessage,
+            "timestamp": current_timestamp
+          }
+        }
+      ]
+    }
+    chatbotResponse(message_body);
   }
 }
 
