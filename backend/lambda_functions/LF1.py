@@ -13,6 +13,9 @@ import datetime
 import time
 import os
 import logging
+import json
+import boto3
+from botocore.exceptions import ClientError
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -86,6 +89,24 @@ def isvalid_date(date):
     except ValueError:
         return False
 
+def send_sqs_message(QueueName, msg_body):
+    """
+    :param QueueName: String name of existing SQS queue
+    :param msg_body: String message body
+    :return: Dictionary containing information about the sent message. If
+        error, returns None.
+    """
+
+    # Send the SQS message
+    sqs_client = boto3.client('sqs')    
+    sqs_queue_url = sqs_client.get_queue_url(QueueName=QueueName)['QueueUrl']
+    try:
+        msg = sqs_client.send_message(QueueUrl=sqs_queue_url, MessageBody=json.dumps(msg_body)) 
+    except ClientError as e:
+        logging.error(e) 
+        return None
+    return msg
+    
 """ --- Functions that control the bot's behavior --- """
 def validate_parameters(time_, cuisine, location, num_people, phone_number):
     
@@ -135,6 +156,14 @@ def get_restaurants(intent_request):
         num_people = slots["num_people"]
         phone_number = slots["phone_number"]
         
+        slot_dict = {
+            'time': time_,
+            'cuisine': cuisine,
+            'location': location,
+            'num_people': num_people,
+            'phone_number': phone_number
+        }
+        
         validation_result = validate_parameters(time_, cuisine, location, num_people, phone_number)
         if not validation_result['isValid']:
             slots[validation_result['violatedSlot']] = None
@@ -152,19 +181,35 @@ def get_restaurants(intent_request):
 
         #return delegate(output_session_attributes, get_slots(intent_request))s
     
-    response = {
-                "dialogAction":
-                    {
-                     "fulfillmentState":"Fulfilled",
-                     "type":"Close",
-                     "message":
+    res = send_sqs_message('Q1', slot_dict)
+    
+    if res:
+        response = {
+                    "dialogAction":
                         {
-                          "contentType":"PlainText",
-                          "content": "Cool! we have received your request. You will soon have a message on your phone with recommendations enlisted!",
+                         "fulfillmentState":"Fulfilled",
+                         "type":"Close",
+                         "message":
+                            {
+                              "contentType":"PlainText",
+                              "content": "Cool! we have received your request. You will soon have a message on your phone with recommendations enlisted! {},{},{},{},{}".format(
+                                  time_, cuisine, location, num_people, phone_number),
+                            }
+                        }
+        }
+    else:
+        response = {
+                    "dialogAction":
+                        {
+                         "fulfillmentState":"Fulfilled",
+                         "type":"Close",
+                         "message":
+                            {
+                              "contentType":"PlainText",
+                              "content": "We are experiencing problem. Please try after some time!",
+                            }
                         }
                     }
-                }
-                
     return response
 
 def greet(intent_request):
@@ -175,7 +220,7 @@ def greet(intent_request):
             'type': 'ElicitIntent',
             'message': {
                 "contentType": "PlainText",
-                "content": "Hi there, What can I help you with?"
+                "content": "Hey Buddy, How can I help you?"
             }
         }
     }
