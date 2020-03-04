@@ -27,7 +27,7 @@ with open("../data/restaurants_american.json") as json_file:
     for restaurant in restaurants:
         try:
             item = {
-            'insertedAtTimestamp': datetime.datetime.strftime(datetime.datetime.now(), '%s'),
+            'insertedAtTimestamp': str(datetime.datetime.now().timestamp()*1000),
             'id': restaurant['id'],
             'name': restaurant['name'],
             'rating':str(restaurant['rating']),
