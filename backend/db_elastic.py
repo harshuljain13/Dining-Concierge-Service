@@ -19,9 +19,10 @@ table = dynamodb.Table('yelp-restaurants')
 # The endpoint of ES
 host = "search-dining-concierge-ogeltqbendc4e6kdwwrhhqhjzq.us-east-1.es.amazonaws.com"
 # Make connection to ES
-client = boto3.client("es")
 service = "es"
-credentials = boto3.Session().get_credentials()
+#awsauth = AWS4Auth([''], [''], region=['us-east-1'], service=service)
+credentials = boto3.Session(region_name='us-eas-1', aws_access_key_id='AKIATMX4AJ2YCJOVKXXP',
+                            aws_secret_access_key='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').get_credentials()
 awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, 'us-east-1', service)
 
 es = Elasticsearch(
@@ -33,7 +34,7 @@ es = Elasticsearch(
 )
 
 
-x    = table.scan()
+x = table.scan()
 data = x["Items"]
 id=[]
 final_data=[]
