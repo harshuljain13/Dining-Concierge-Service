@@ -21,7 +21,7 @@ dynamodb = boto3.resource('dynamodb', region_name='us-east-1', aws_access_key_id
          aws_secret_access_key= 'Fv80j+bGY8XDBagMAQPytBXAFjP37P7hAGVKItA6')
 table = dynamodb.Table('yelp-restaurants')
 
-with open("../data/restaurants_american.json") as json_file:
+with open("../data/restaurants_korean.json") as json_file:
     restaurants = json.load(json_file)
     count= 0
     for restaurant in restaurants:
@@ -35,7 +35,7 @@ with open("../data/restaurants_american.json") as json_file:
             'address' : restaurant['location']['display_address'],
             'coordinates': str(restaurant['coordinates']),
             'zipcode': restaurant['location']['zip_code'],
-            'cuisine': 'american'
+            'cuisine': 'korean'
 
             }
 

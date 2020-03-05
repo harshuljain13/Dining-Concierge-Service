@@ -6,14 +6,14 @@ import datetime
 
 URL = "https://api.yelp.com/v3/businesses/search"
 count = 0
-with open('../data/restaurants_american.json', 'w') as f:
+with open('../data/restaurants_korean.json', 'w') as f:
     final_businesses = []
     for i in range(0, 1000, 50):
         # location given here
         term = "Restaurants"
         location = "Manhattan"
         limit = 50
-        categories = "american"
+        categories = 'korean'
         offset = i
         headers = {'Authorization': 'Bearer a_M9Y7_e_URva_rVnSvPugh_wMgmZNPMnowiQ_nIV9t9MuE_W7O8gBr7sm0agIx-OHqjVDLa8sLCM1F3TTw7hSvGCIKHsjBGOL71cBfpMcR2HCQZjMOgUe5UpFRdXnYx'}
         # defining a params dict for the parameters to be sent to the API
