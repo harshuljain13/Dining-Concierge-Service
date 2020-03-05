@@ -18,32 +18,10 @@ Elastic = boto3.resource('dynamodb', region_name='us-east-1', aws_access_key_id=
          aws_secret_access_key= 'Fv80j+bGY8XDBagMAQPytBXAFjP37P7hAGVKItA6')
 table = dynamodb.Table('yelp-restaurants')
 
-
-#fe = Key('name')
-
-x    = table.scan()
-data = x["Items"]
-name=[]
-final_data=[]
-cuisine =[]
-for each_entry in data:
-    name.append(each_entry["name"])
-    cuisine.append(each_entry["zipcode"]) 
-    final_data.append([each_entry["name"],each_entry["zipcode"]])
-
-print (cuisine)
-
-
-client = boto3.client("es")
-
-
-
-
 # The endpoint of ES
 host = "search-dining-concierge-ogeltqbendc4e6kdwwrhhqhjzq.us-east-1.es.amazonaws.com"
-
-
-
+# Make connection to ES
+client = boto3.client("es")
 service = "es"
 credentials = boto3.Session().get_credentials()
 awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, region, service)
@@ -56,14 +34,33 @@ es = Elasticsearch(
     connection_class=RequestsHttpConnection
 )
 
-count = 0
 
-es.index(index="restaurants", doc_type="restaurant", id=restaurantId, body=document)
+x    = table.scan()
+data = x["Items"]
+id=[]
+final_data=[]
+cuisine =[]
+for each_entry in data:
+    id.append(each_entry["id"])
+    cuisine.append(each_entry["cuisine"]) 
+     document = {
+        "restaurantId": each_entry["id"],
+        "cuisine": each_entry["cuisine"]
+    }
+    es.index(index="restaurants", doc_type="restaurant", id=each_entry["id"], body=document)
 
-# Verify that the document was successfully indexed
-check = es.get(index="restaurants", doc_type="restaurant", id=restaurantId)
-if check["found"]:
-    print("Index %s succeeded" % restaurantId)
+
+    # Verify that the document was successfully indexed
+    check = es.get(index="restaurants", doc_type="restaurant", id=each_entry["id"])
+    if check["found"]:
+        print("Index %s succeeded" % each_entry["id"])
+        print(count)
+
+
+
+
+
+
 
 
 
