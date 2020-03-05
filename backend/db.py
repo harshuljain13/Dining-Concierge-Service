@@ -34,7 +34,9 @@ with open("../data/restaurants_american.json") as json_file:
             'num_reviews': str(restaurant['review_count']),
             'address' : restaurant['location']['display_address'],
             'coordinates': str(restaurant['coordinates']),
-            'zipcode': restaurant['location']['zip_code']
+            'zipcode': restaurant['location']['zip_code'],
+            'cuisine': 'american'
+
             }
 
             table.put_item(Item=item)
