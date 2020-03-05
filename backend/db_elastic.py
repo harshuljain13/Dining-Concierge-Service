@@ -17,11 +17,11 @@ dynamodb = boto3.resource('dynamodb', region_name='us-east-1', aws_access_key_id
 table = dynamodb.Table('yelp-restaurants')
 
 # The endpoint of ES
-host = "search-dining-concierge-ogeltqbendc4e6kdwwrhhqhjzq.us-east-1.es.amazonaws.com"
+host = "search-chatbot-dining-wg5tilf6pkugcxzjjsuouxeid4.us-east-1.es.amazonaws.com"
 # Make connection to ES
 service = "es"
 #awsauth = AWS4Auth([''], [''], region=['us-east-1'], service=service)
-credentials = boto3.Session(region_name='us-eas-1', aws_access_key_id='AKIATMX4AJ2YCJOVKXXP',
+credentials = boto3.Session(region_name='us-east-1', aws_access_key_id='AKIATMX4AJ2YCJOVKXXP',
                             aws_secret_access_key='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').get_credentials()
 awsauth = AWS4Auth(credentials.access_key, credentials.secret_key, 'us-east-1', service)
 
