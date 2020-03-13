@@ -8,7 +8,7 @@ from elasticsearch import Elasticsearch, RequestsHttpConnection
 from requests_aws4auth import AWS4Auth
 
 # The endpoint of ES
-host = "search-chatbot-dining-wg5tilf6pkugcxzjjsuouxeid4.us-east-1.es.amazonaws.com"
+host = "search-dining-concierge-ogeltqbendc4e6kdwwrhhqhjzq.us-east-1.es.amazonaws.com"
 # Make connection to ES
 service = "es"
 #awsauth = AWS4Auth([''], [''], region=['us-east-1'], service=service)

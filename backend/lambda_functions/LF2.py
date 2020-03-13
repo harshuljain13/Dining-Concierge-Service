@@ -95,7 +95,7 @@ def get_dynamo_data(dynno, table, key):
     return '{}, {}'.format(name, address)
 
 def lambda_handler(event, context):
-    es_host = 'https://search-chatbot-dining-wg5tilf6pkugcxzjjsuouxeid4.us-east-1.es.amazonaws.com/restaurants'
+    es_host = 'https://search-dining-concierge-ogeltqbendc4e6kdwwrhhqhjzq.us-east-1.es.amazonaws.com/restaurants'
     table_name = 'yelp-restaurants'
     
     messages = get_sqs_data('Q1')
