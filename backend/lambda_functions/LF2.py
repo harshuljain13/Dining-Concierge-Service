@@ -77,8 +77,8 @@ def compose_es_payload(msg_attributes, n):
     }
 
 def es_search(host, payload):
-    credentials = boto3.Session(region_name='us-east-1', aws_access_key_id='AKIATMX4AJ2YCJOVKXXP',
-                            aws_secret_access_key='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').get_credentials()
+    credentials = boto3.Session(region_name='us-east-1', aws_access_key_id='',
+                            aws_secret_access_key='').get_credentials()
     awsauth = aws4auth.AWS4Auth(credentials.access_key, credentials.secret_key, 'us-east-1', 'es', session_token=credentials.token)
     response = requests.get(host + "/_search", auth=awsauth, json=payload)
     logging.info('response : {}'.format(response))
