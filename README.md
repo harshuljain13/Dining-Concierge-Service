@@ -2,13 +2,8 @@
 
 AWS services based Dining Recommendation System
 
-![](https://github.com/harshul1610/Dining-Concierge-Service/blob/master/images/demo1.png)
+![Demo](https://github.com/harshul1610/Dining-Concierge-Service/blob/master/images/demo1.png)
 
-### Author
+# Architecture
 
-```
-Abhishek Khanna
-Deepankar Dixit
-Harshul Jain
-Soham
-```
+![architecture](https://github.com/harshul1610/Dining-Concierge-Service/blob/master/images/architecture.png)
